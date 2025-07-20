@@ -22,7 +22,7 @@ services:
 
   # React 프론트엔드
   - name: react-frontend
-    type: static
+    type: static_site
     plan: free
     rootDir: ./frontend
     buildCommand: npm install && npm run build
