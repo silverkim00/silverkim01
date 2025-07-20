@@ -1,15 +1,17 @@
 databases:
   - name: company-db
     plan: free
-    postgresVersion: 15
+    # postgresVersion 또는 version 필드는 제거합니다.
+    # Render가 기본 PostgreSQL 버전을 사용하도록 하거나,
+    # 다른 방식으로 버전을 지정해야 할 경우 Render 문서를 참고해야 합니다.
 
 services:
   - name: django-backend
     type: web
     plan: free
     env: docker
-    rootDir: ./company
-    dockerfilePath: Dockerfile
+    rootDir: ./company # 이 서비스에 대한 루트 디렉토리를 ./company로 설정합니다.
+    dockerfilePath: Dockerfile # ./company 디렉토리 안의 Dockerfile을 사용합니다.
     envVars:
       - key: DATABASE_URL
         fromDatabase:
@@ -19,11 +21,11 @@ services:
         value: 3.10
 
   - name: react-frontend
-    type: static_site
+    type: web # static_site 대신 web으로 변경합니다.
     plan: free
     rootDir: ./frontend
     buildCommand: npm install && npm run build
-    publishDir: build
+    staticPublishPath: build # publishDir 대신 staticPublishPath를 사용합니다.
     routes:
       - type: rewrite
         source: /*
