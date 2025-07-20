@@ -1,14 +1,14 @@
 databases:
   - name: company-db
     plan: free
-    
+
 services:
   - type: web
     name: django-backend
     env: docker
     plan: free
-    rootDir: .                       # ← 최상위 루트
-    dockerfilePath: company/Dockerfile   # ← Dockerfile이 있는 경로
+    rootDir: company                  # ← manage.py가 있는 폴더
+    dockerfilePath: Dockerfile        # ← 위 폴더 바로 안의 Dockerfile
     startCommand: >
       python manage.py migrate --noinput &&
       python manage.py collectstatic --noinput &&
@@ -25,3 +25,4 @@ services:
         value: "False"
       - key: ALLOWED_HOSTS
         value: ".onrender.com,localhost,127.0.0.1"
+
