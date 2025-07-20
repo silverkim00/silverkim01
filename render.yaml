@@ -1,11 +1,12 @@
-services:
-  # 1. PostgreSQL 데이터베이스 생성
+# 1. 데이터베이스 정의 (services 밖, 별도의 databases 키 사용)
+databases:
   - name: company-db
-    type: postgres
-    psqlVersion: 15
     plan: free
+    postgresVersion: 15
 
-  # 2. Django 백엔드 배포 (Web Service)
+# 2. 서비스들 정의
+services:
+  # Django 백엔드
   - name: django-backend
     type: web
     plan: free
@@ -15,16 +16,14 @@ services:
       - key: PYTHON_VERSION
         value: 3.10
       - key: DATABASE_URL
-        fromService:
-          type: postgres
+        fromDatabase: # 'fromService'가 아니라 'fromDatabase'를 사용합니다.
           name: company-db
           property: connectionString
 
-  # 3. React 프론트엔드 배포 (Static Site)
+  # React 프론트엔드
   - name: react-frontend
     type: static
     plan: free
-    repo: https://github.com/silverkim00/silverkim01.git # 본인 GitHub 주소로 변경
     rootDir: ./frontend
     buildCommand: npm install && npm run build
     publishDir: build
