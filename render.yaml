@@ -18,16 +18,11 @@ services:
         value: 3.10
 
   - name: react-frontend
-    type: web # static_site 대신 web 타입으로 변경
+    type: web # Changed from static_site to web
     plan: free
     rootDir: ./frontend
-    # buildCommand는 웹 서비스 내에서 정적 파일을 생성하는 명령으로 사용됩니다.
     buildCommand: npm install && npm run build
-    # publishDir은 웹 서비스가 정적 파일을 서빙할 디렉토리를 지정합니다.
-    # 일반적으로 React 빌드 출력은 'build' 디렉토리에 있습니다.
-    staticPublishPath: build # 정적 파일 서빙을 위한 경로
-    # routes는 웹 서비스에서 라우팅 규칙을 정의합니다.
-    # SPA (Single Page Application)를 위한 rewrite 규칙은 여기에 포함됩니다.
+    staticPublishPath: build # Corrected for web service static file serving
     routes:
       - type: rewrite
         source: /*
