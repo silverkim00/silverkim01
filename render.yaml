@@ -1,3 +1,7 @@
+databases:
+  - name: company-db
+    plan: free
+    
 services:
   - type: web
     name: django-backend
