@@ -1,23 +1,21 @@
 # ── company-project/render.yaml ──
 
-# 1) PostgreSQL 데이터베이스
 databases:
   - name: company-db
     plan: free
 
-# 2) 서비스 정의
 services:
-  # 2-1) Django 백엔드 (Docker)
+  # Django 백엔드
   - type: web
     name: django-backend
     plan: free
     env: docker
-    rootDir: .                     # repo 루트 기준
-    dockerfilePath: company/Dockerfile
+    rootDir: company           # manage.py와 Dockerfile 위치
+    dockerfilePath: Dockerfile # 위 폴더 안의 Dockerfile
     startCommand: >
-      python company/manage.py migrate --noinput &&
-      python company/manage.py collectstatic --noinput &&
-      gunicorn config.wsgi:application --chdir company --bind 0.0.0.0:$PORT
+      python manage.py migrate --noinput &&
+      python manage.py collectstatic --noinput &&
+      gunicorn config.wsgi:application --bind 0.0.0.0:$PORT
     envVars:
       - key: DATABASE_URL
         fromDatabase:
@@ -30,11 +28,11 @@ services:
       - key: ALLOWED_HOSTS
         value: ".onrender.com,localhost,127.0.0.1"
 
-  # 2-2) React 프론트엔드 (Static)
+  # React 프론트엔드
   - type: static
     name: react-frontend
     plan: free
-    rootDir: frontend              # frontend 디렉터리 기준
+    rootDir: frontend
     buildCommand: |
       npm install &&
       npm run build
