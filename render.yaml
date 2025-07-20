@@ -1,8 +1,9 @@
 databases:
   - name: company-db
     plan: free
-    # postgresVersion 또는 version 필드는 제거합니다.
-    # Render가 기본 PostgreSQL 버전을 사용하도록 하거나,
+    # 이전 오류 메시지 (postgresVersion, version 필드 인식 못함)를 바탕으로
+    # 데이터베이스 버전 관련 필드는 제거합니다.
+    # Render가 기본 PostgreSQL 버전을 사용하거나,
     # 다른 방식으로 버전을 지정해야 할 경우 Render 문서를 참고해야 합니다.
 
 services:
@@ -19,6 +20,21 @@ services:
           property: connectionString
       - key: PYTHON_VERSION
         value: 3.10
+      # Django의 DEBUG 모드를 False로 설정하는 것이 프로덕션에서는 안전합니다.
+      # 디버깅을 위해 일시적으로 "True"로 설정할 수도 있습니다.
+      # - key: DEBUG
+      #   value: "True"
+      # Django의 ALLOWED_HOSTS 설정도 중요합니다. Render 배포 URL을 포함해야 합니다.
+      # 예: your-service-name.onrender.com
+      # - key: ALLOWED_HOSTS
+      #   value: .render.com,localhost,127.0.0.1
+    # 여기가 핵심입니다. 애플리케이션 시작 명령을 명확하게 지정합니다.
+    # gunicorn은 프로덕션 환경에서 더 안정적인 WSGI 서버입니다.
+    # 'your_project_name'은 settings.py가 있는 Django 프로젝트 폴더의 이름으로 바꿔야 합니다.
+    startCommand: python manage.py migrate --noinput && gunicorn your_project_name.wsgi:application --bind 0.0.0.0:$PORT
+    # 만약 gunicorn을 사용하지 않고 테스트용으로 빠르게 확인하고 싶다면 아래를 사용할 수 있습니다.
+    # startCommand: python manage.py migrate --noinput && python manage.py runserver 0.0.0.0:$PORT
+
 
   - name: react-frontend
     type: web # static_site 대신 web으로 변경합니다.
