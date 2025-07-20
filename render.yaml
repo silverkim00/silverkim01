@@ -8,6 +8,7 @@ services:
     type: web
     plan: free
     env: docker
+    rootDir: ./company
     dockerfilePath: ./company/Dockerfile
     envVars:
       - key: DATABASE_URL
