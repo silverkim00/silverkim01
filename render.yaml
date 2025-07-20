@@ -1,7 +1,7 @@
 databases:
   - name: company-db
     plan: free
-    version: 15 # postgresVersion 대신 version으로 변경
+    # postgresVersion 또는 version 필드 모두 제거하여 기본값을 사용하도록 합니다.
 
 services:
   - name: django-backend
