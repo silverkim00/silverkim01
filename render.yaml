@@ -1,16 +1,15 @@
-# 1. PostgreSQL 데이터베이스
+# render.yaml
 databases:
   - name: company-db
     plan: free
 
-# 2. 서비스들
 services:
-  # 2-1. Django 백엔드 (Docker)
+  # Django 백엔드
   - type: web
     name: django-backend
     plan: free
     env: docker
-    rootDir: company                  # manage.py가 있는 폴더명
+    rootDir: company
     dockerfilePath: company/Dockerfile
     startCommand: >
       python manage.py migrate --noinput &&
@@ -28,14 +27,23 @@ services:
       - key: ALLOWED_HOSTS
         value: ".onrender.com,localhost,127.0.0.1"
 
-  # 2-2. React 프론트엔드 (Static)
+  # React 프론트엔드
   - type: static
     name: react-frontend
     plan: free
     repo: https://github.com/silverkim00/silverkim01.git
     rootDir: frontend
-    buildCommand: npm install && npm run build
+    buildCommand: |
+      # 배포 시에는 .env 파일을 읽지 않으니,
+      # 환경변수로 REACT_APP_API_BASE_URL을 주입합니다.
+      npm install &&
+      export REACT_APP_API_BASE_URL=https://django-backend-gwoq.onrender.com/api &&
+      npm run build
     staticPublishPath: build
+    envVars:
+      - key: REACT_APP_API_BASE_URL
+        # 실제 배포된 백엔드 URL로 바꿔주세요
+        value: "https://django-backend-gwoq.onrender.com/api"
     routes:
       - type: rewrite
         source: /*
