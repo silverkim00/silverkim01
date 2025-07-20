@@ -9,7 +9,7 @@ services:
     plan: free
     env: docker
     rootDir: ./company
-    dockerfilePath: ./company/Dockerfile
+    ockerfilePath: Dockerfile
     envVars:
       - key: DATABASE_URL
         fromDatabase:
