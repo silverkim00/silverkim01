@@ -1,47 +1,41 @@
+# 1. PostgreSQL 데이터베이스
 databases:
   - name: company-db
     plan: free
-    # 이전 오류 메시지 (postgresVersion, version 필드 인식 못함)를 바탕으로
-    # 데이터베이스 버전 관련 필드는 제거합니다.
-    # Render가 기본 PostgreSQL 버전을 사용하거나,
-    # 다른 방식으로 버전을 지정해야 할 경우 Render 문서를 참고해야 합니다.
 
+# 2. 서비스들
 services:
-  - name: django-backend
-    type: web
+  # 2-1. Django 백엔드 (Docker)
+  - type: web
+    name: django-backend
     plan: free
     env: docker
-    rootDir: ./company # 이 서비스에 대한 루트 디렉토리를 ./company로 설정합니다.
-    dockerfilePath: Dockerfile # ./company 디렉토리 안의 Dockerfile을 사용합니다.
+    rootDir: company                  # manage.py가 있는 폴더명
+    dockerfilePath: company/Dockerfile
+    startCommand: >
+      python manage.py migrate --noinput &&
+      python manage.py collectstatic --noinput &&
+      gunicorn config.wsgi:application --bind 0.0.0.0:$PORT
     envVars:
       - key: DATABASE_URL
         fromDatabase:
           name: company-db
           property: connectionString
-      - key: PYTHON_VERSION
-        value: 3.10
-      # Django의 DEBUG 모드를 False로 설정하는 것이 프로덕션에서는 안전합니다.
-      # 디버깅을 위해 일시적으로 "True"로 설정할 수도 있습니다.
-      # - key: DEBUG
-      #   value: "True"
-      # Django의 ALLOWED_HOSTS 설정도 중요합니다. Render 배포 URL을 포함해야 합니다.
-      # 예: your-service-name.onrender.com
-      # - key: ALLOWED_HOSTS
-      #   value: .render.com,localhost,127.0.0.1
-    # 여기가 핵심입니다. 애플리케이션 시작 명령을 명확하게 지정합니다.
-    # gunicorn은 프로덕션 환경에서 더 안정적인 WSGI 서버입니다.
-    # 'your_project_name'은 settings.py가 있는 Django 프로젝트 폴더의 이름으로 바꿔야 합니다.
-    startCommand: python manage.py migrate --noinput && gunicorn your_project_name.wsgi:application --bind 0.0.0.0:$PORT
-    # 만약 gunicorn을 사용하지 않고 테스트용으로 빠르게 확인하고 싶다면 아래를 사용할 수 있습니다.
-    # startCommand: python manage.py migrate --noinput && python manage.py runserver 0.0.0.0:$PORT
+      - key: SECRET_KEY
+        value: "5^bug+*qjmg3b)+bwp#j09-(wguw!umv&m2yatbv_ji0los_*!"
+      - key: DEBUG
+        value: "False"
+      - key: ALLOWED_HOSTS
+        value: ".onrender.com,localhost,127.0.0.1"
 
-
-  - name: react-frontend
-    type: web # static_site 대신 web으로 변경합니다.
+  # 2-2. React 프론트엔드 (Static)
+  - type: static
+    name: react-frontend
     plan: free
-    rootDir: ./frontend
+    repo: https://github.com/silverkim00/silverkim01.git
+    rootDir: frontend
     buildCommand: npm install && npm run build
-    staticPublishPath: build # publishDir 대신 staticPublishPath를 사용합니다.
+    staticPublishPath: build
     routes:
       - type: rewrite
         source: /*

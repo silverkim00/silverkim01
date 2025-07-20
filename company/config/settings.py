@@ -1,24 +1,20 @@
 from pathlib import Path
 import os
+import dj_database_url
 
-# Build paths inside the project like this: BASE_DIR / 'subdir'.
+# --- 기본 경로 설정 ---
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
+# --- 보안 설정 ---
+SECRET_KEY = os.getenv("SECRET_KEY", "your-local-secret-key")
 
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-15a^2lz=(fvu&in*&-m7rs!i@7c-i07@mojzzux516a@44!_@^'
+DEBUG = os.getenv("DEBUG", "False") == "True"
 
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
-
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = os.getenv("ALLOWED_HOSTS", "localhost").split(",")
 
 
-# Application definition
-
+# --- 애플리케이션 등록 ---
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -27,15 +23,17 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
-    # Third-party apps
+    # Third-party
     'rest_framework',
     'rest_framework.authtoken',
     'corsheaders',
 
-    # Local apps
+    # Local
     'core',
 ]
 
+
+# --- 미들웨어 설정 ---
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -47,6 +45,8 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
+
+# --- URL 설정 ---
 ROOT_URLCONF = 'config.urls'
 
 TEMPLATES = [
@@ -68,24 +68,22 @@ TEMPLATES = [
 WSGI_APPLICATION = 'config.wsgi.application'
 
 
-# Database
-# https://docs.djangoproject.com/en/5.2/ref/settings/#databases
-
-# 이 부분은 원래 사용하시던 MySQL 정보로 바꿔주세요.
+# --- 데이터베이스 설정 ---
 DATABASES = {
     'default': dj_database_url.config(
         conn_max_age=600,
-        ssl_require=True # Render 데이터베이스는 SSL 연결이 필요
+        ssl_require=True  # Render에서 SSL 필수
     )
 }
-# Django가 사용자를 인증할 때 어떤 백엔드를 사용할지 명시적으로 지정합니다.
+
+
+# --- 인증 백엔드 설정 ---
 AUTHENTICATION_BACKENDS = [
     'django.contrib.auth.backends.ModelBackend',
 ]
 
-# Password validation
-# https://docs.djangoproject.com/en/5.2/ref/settings/#auth-password-validators
 
+# --- 비밀번호 검증 ---
 AUTH_PASSWORD_VALIDATORS = [
     {
         'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
@@ -102,38 +100,33 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 
-# Internationalization
-# https://docs.djangoproject.com/en/5.2/topics/i18n/
-
+# --- 국제화 ---
 LANGUAGE_CODE = 'en-us'
 TIME_ZONE = 'UTC'
 USE_I18N = True
 USE_TZ = True
 
 
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/5.2/howto/static-files/
-
+# --- 정적 파일 및 미디어 파일 ---
 STATIC_URL = 'static/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
-# Default primary key field type
-# https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
-DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-# CORS 설정
-CORS_ALLOWED_ORIGINS = [
-    'http://localhost:3000',
-]
-
-# --- 추가된 코드 ---
-# Django REST Framework의 기본 설정을 명시적으로 지정합니다.
+# --- REST 프레임워크 설정 ---
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
         'rest_framework.authentication.TokenAuthentication',
     ],
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
-    'PAGE_SIZE': 20, # 한 페이지에 20개의 데이터를 보여줍니다.
+    'PAGE_SIZE': 20,
 }
-MEDIA_URL = '/media/'
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+
+# --- CORS 설정 ---
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:3000",
+    "https://your-frontend.onrender.com",  # 실제 프론트 도메인으로 교체
+]
