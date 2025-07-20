@@ -1,19 +1,15 @@
-databases:
-  - name: company-db
-    plan: free
-
 services:
-  # 1) Django 백엔드
   - type: web
     name: django-backend
-    plan: free
     env: docker
-    rootDir: company                  # manage.py 위치한 폴더명
-    dockerfilePath: company/Dockerfile
+    plan: free
+    rootDir: .                       # ← 최상위 루트
+    dockerfilePath: company/Dockerfile   # ← Dockerfile이 있는 경로
     startCommand: >
       python manage.py migrate --noinput &&
       python manage.py collectstatic --noinput &&
       gunicorn config.wsgi:application --bind 0.0.0.0:$PORT
+
     envVars:
       - key: DATABASE_URL
         fromDatabase:
@@ -25,22 +21,3 @@ services:
         value: "False"
       - key: ALLOWED_HOSTS
         value: ".onrender.com,localhost,127.0.0.1"
-
-  # 2) React 프론트엔드
-  - type: static
-    name: react-frontend
-    plan: free
-    repo: https://github.com/silverkim00/silverkim01.git
-    rootDir: frontend
-    buildCommand: |
-      npm install &&
-      export REACT_APP_API_BASE_URL=https://django-backend-gwoq.onrender.com/api &&
-      npm run build
-    staticPublishPath: build
-    envVars:
-      - key: REACT_APP_API_BASE_URL
-        value: "https://django-backend-gwoq.onrender.com/api"
-    routes:
-      - type: rewrite
-        source: /*
-        destination: /index.html
