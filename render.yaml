@@ -1,15 +1,21 @@
+# render.yaml (리포 루트에 위치)
+
+# 1) PostgreSQL 데이터베이스
 databases:
   - name: company-db
     plan: free
 
+# 2) 서비스 정의
 services:
+  # 2-1) Django 백엔드 (Docker)
   - type: web
     name: django-backend
     plan: free
     env: docker
-    rootDir: company
-    dockerfilePath: Dockerfile
+    rootDir: company           # company/manage.py 위치
+    dockerfilePath: Dockerfile # company/Dockerfile
     startCommand: |
+      # Django migrate → collectstatic → Gunicorn
       python manage.py migrate --noinput
       python manage.py collectstatic --noinput
       gunicorn config.wsgi:application --bind 0.0.0.0:$PORT
@@ -19,25 +25,24 @@ services:
           name: company-db
           property: connectionString
       - key: SECRET_KEY
-        value: "5^bug+*qjmg3b)+bwp#j09-(wguw!umv&m2yatbv_ji0los_*!"
+        value: "5^bug+*qjmg3b)+bwp#j09-(wguw!umv&m2yatbv_ji0los_*!"`
       - key: DEBUG
         value: "False"
       - key: ALLOWED_HOSTS
         value: ".onrender.com,localhost,127.0.0.1"
 
-
-  # React 프론트엔드
+  # 2-2) React 프론트엔드 (Static)
   - type: static
     name: react-frontend
     plan: free
-    rootDir: frontend
+    rootDir: frontend         # frontend/package.json 위치
     buildCommand: |
-      npm install &&
+      npm install
       npm run build
-    staticPublishPath: build
+    staticPublishPath: build  # frontend/build 결과물을 호스팅
     envVars:
       - key: REACT_APP_API_BASE_URL
-        value: "https://django-backend-gwoq.onrender.com/api"
+        value: "https://django-backend-ivq9.onrender.com/api"
     routes:
       - type: rewrite
         source: /*
