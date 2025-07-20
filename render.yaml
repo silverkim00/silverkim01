@@ -1,7 +1,7 @@
 databases:
   - name: company-db
     plan: free
-    # postgresVersion 또는 version 필드 모두 제거하여 기본값을 사용하도록 합니다.
+    postgresVersion: 15
 
 services:
   - name: django-backend
@@ -9,7 +9,7 @@ services:
     plan: free
     env: docker
     rootDir: ./company
-    ockerfilePath: Dockerfile
+    dockerfilePath: Dockerfile
     envVars:
       - key: DATABASE_URL
         fromDatabase:
@@ -19,11 +19,11 @@ services:
         value: 3.10
 
   - name: react-frontend
-    type: web
+    type: static_site
     plan: free
     rootDir: ./frontend
     buildCommand: npm install && npm run build
-    staticPublishPath: build
+    publishDir: build
     routes:
       - type: rewrite
         source: /*
