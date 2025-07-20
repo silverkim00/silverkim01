@@ -1,0 +1,34 @@
+services:
+  # 1. PostgreSQL 데이터베이스 생성
+  - name: company-db
+    type: psql
+    psqlVersion: 15
+    plan: free
+
+  # 2. Django 백엔드 배포 (Web Service)
+  - name: django-backend
+    type: web
+    plan: free
+    env: docker
+    dockerfilePath: ./company/Dockerfile
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.10
+      - key: DATABASE_URL
+        fromService:
+          type: psql
+          name: company-db
+          property: connectionString
+
+  # 3. React 프론트엔드 배포 (Static Site)
+  - name: react-frontend
+    type: static
+    plan: free
+    repo: https://github.com/silverkim00/silverkim01.git # 본인 GitHub 주소로 변경
+    rootDir: ./frontend
+    buildCommand: npm install && npm run build
+    publishDir: build
+    routes:
+      - type: rewrite
+        source: /*
+        destination: /index.html

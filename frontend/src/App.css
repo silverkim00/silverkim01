@@ -1,0 +1,319 @@
+/* ===================================================================
+ * Final Theme: "Pastel Sunshine"
+ * ----------------------------------------------------------------
+ * --color-bg         : #FEFBF3 (아주 연한 크림색)
+ * --color-surface    : #FFFFFF (흰색)
+ * --color-primary    : #B3E5FC (부드러운 하늘색)
+ * --color-accent     : #FFAB91 (따뜻한 코랄핑크)
+ * --color-text-main  : #5D4037 (부드러운 다크브라운)
+ * --color-border     : #E0E0E0 (연한 회색)
+ * =================================================================== */
+
+/* ===================================================================
+ 1. 기본 & 공통 레이아웃 (Global & Layout)
+ =================================================================== */
+ body {
+    background-color: var(--color-bg, #FEFBF3);
+    color: var(--color-text-main, #5D4037);
+    font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+        'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+        sans-serif;
+    margin: 0;
+}
+
+.App {
+    background-color: var(--color-bg, #FEFBF3);
+    min-height: 100vh;
+}
+
+.app-main-content {
+    width: 100%;
+    max-width: 1800px;
+    margin: 0 auto;
+    padding: 25px 40px;
+    box-sizing: border-box;
+}
+
+.list-section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    padding-bottom: 15px;
+    border-bottom: 2px solid var(--color-border, #E0E0E0);
+}
+.list-section-header h1 {
+    margin: 0;
+    font-size: 2.2rem;
+    color: var(--color-text-main, #5D4037);
+}
+
+/* ===================================================================
+ 2. 헤더 (Header)
+ =================================================================== */
+.app-main-header {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 40px;
+    background-color: var(--color-surface, #FFFFFF);
+    border-bottom: 1px solid var(--color-border, #E0E0E0);
+    box-sizing: border-box;
+}
+
+.header-left, .header-right {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.welcome-message {
+    font-size: 1.1rem;
+    font-weight: 600;
+}
+
+/* ===================================================================
+ 3. 대시보드 & 위젯 (Dashboard & Widget)
+ =================================================================== */
+.dashboard-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    gap: 25px;
+    margin-bottom: 40px;
+}
+
+.dashboard-widget {
+    background-color: var(--color-surface, #FFFFFF);
+    padding: 25px;
+    border-radius: 16px;
+    border: 1px solid var(--color-border, #E0E0E0);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+    text-align: left;
+}
+
+.widget-title {
+    margin: 0 0 15px 0;
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: var(--color-text-main, #5D4037);
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--color-border, #E0E0E0);
+}
+
+/* ===================================================================
+ 4. 툴바 & 버튼 & 입력 필드 (Toolbar, Buttons & Inputs)
+ =================================================================== */
+.toolbar, .search-toolbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 20px;
+}
+.search-toolbar {
+    background-color: var(--color-surface, #FFFFFF);
+    padding: 15px 20px;
+    border-radius: 12px;
+    border: 1px solid var(--color-border, #E0E0E0);
+}
+.toolbar-left, .toolbar-right { display: flex; gap: 10px; }
+.date-filter { display: flex; align-items: center; gap: 10px; }
+.date-filter span { font-weight: 500; }
+.date-filter input[type="date"], .search-input, .form-input, .form-textarea, .form-select {
+    padding: 10px;
+    border: 1px solid var(--color-border, #E0E0E0);
+    border-radius: 8px;
+    font-size: 0.9rem;
+    font-family: inherit;
+    color: var(--color-text-main, #5D4037);
+}
+.search-input { flex-grow: 1; }
+
+.btn-primary, .btn-secondary, .details-button, .logout-button, .btn-search, .btn-excel {
+    padding: 10px 18px;
+    border-radius: 8px;
+    font-weight: 700;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-size: 0.9rem;
+    white-space: nowrap;
+}
+.btn-primary { background-color: var(--color-primary, #B3E5FC); color: var(--color-text-main, #5D4037); }
+.btn-primary:hover { filter: brightness(95%); }
+.btn-secondary { background-color: #CFD8DC; color: var(--color-text-main, #5D4037); }
+.btn-secondary:hover { filter: brightness(95%); }
+.btn-search, .details-button { background-color: var(--color-accent, #FFAB91); color: white; }
+.btn-search:hover, .details-button:hover { filter: brightness(95%); }
+.btn-excel { background-color: #A5D6A7; color: var(--color-text-main, #5D4037); }
+.logout-button { background-color: #B0BEC5; color: var(--color-text-main, #5D4037); }
+
+/* ===================================================================
+ 5. 고객 목록 테이블 (Client Table)
+ =================================================================== */
+.client-list-container {
+    overflow-x: auto;
+    border: 1px solid var(--color-border, #E0E0E0);
+    border-radius: 12px;
+    background-color: var(--color-surface, #FFFFFF);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+}
+.client-table { width: 100%; border-collapse: collapse; font-size: 0.9rem; }
+.client-table th, .client-table td {
+    border-bottom: 1px solid var(--color-border, #E0E0E0);
+    padding: 12px 15px;
+    text-align: center;
+    white-space: nowrap;
+}
+.client-table th { background-color: #F5F5F5; font-weight: 700; position: sticky; top: 0; }
+.client-table tbody tr:hover { background-color: #F1F3F5; cursor: pointer; }
+.sortable-header { cursor: pointer; }
+.sortable-header:hover { background-color: #E9ECEF; }
+.sort-icon { margin-left: 8px; color: var(--color-primary, #B3E5FC); }
+
+/* ===================================================================
+ 6. 공지사항 바 (Announcement Bar)
+ =================================================================== */
+.announcement-bar {
+    background-color: #FFF9C4;
+    color: #795548;
+    padding: 15px 20px;
+    border-radius: 12px;
+    margin-bottom: 25px;
+    border: 1px solid #FFF59D;
+    font-weight: 500;
+}
+/* ... (announcement bar styles) ... */
+
+/* ===================================================================
+ 7. 페이지별 컨테이너 (Page Specific Containers)
+ =================================================================== */
+.page-container {
+    background-color: var(--color-surface, #FFFFFF);
+    padding: 40px;
+    border-radius: 16px;
+    border: 1px solid var(--color-border, #E0E0E0);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+    max-width: 1200px;
+    margin: 0 auto;
+}
+.page-container h2 {
+    text-align: center;
+    font-size: 1.8rem;
+    margin-top: 0;
+    margin-bottom: 30px;
+}
+
+/* ===================================================================
+ 8. 출근부 캘린더 (Attendance Calendar)
+ =================================================================== */
+.react-calendar {
+    width: 100%;
+    border: none;
+    border-radius: 12px;
+    background-color: transparent;
+    font-family: 'Pretendard', sans-serif;
+}
+/* ... (calendar styles) ... */
+
+/* ===================================================================
+ 9. 순위/시상금 사이드바 (Ranking Sidebar)
+ =================================================================== */
+.sidebar-overlay {
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    background-color: rgba(0,0,0,0.5); z-index: 999;
+    opacity: 0; visibility: hidden;
+    transition: opacity 0.3s, visibility 0.3s;
+}
+.sidebar-overlay.open { opacity: 1; visibility: visible; }
+
+.ranking-sidebar {
+    position: fixed; top: 0; right: -450px; width: 450px; height: 100%;
+    background-color: var(--color-surface, #FFFFFF);
+    color: var(--color-text-main, #5D4037);
+    box-shadow: -2px 0 10px rgba(0,0,0,0.1);
+    transition: right 0.3s ease-in-out;
+    z-index: 1000;
+    display: flex; flex-direction: column;
+}
+.ranking-sidebar.open { right: 0; }
+/* ... (rest of sidebar styles) ... */
+
+
+/* ===================================================================
+ 10. 랭킹 배너 (Podium) 🏆
+ =================================================================== */
+.ranking-podium {
+    display: flex;
+    align-items: flex-end; /* 아래 정렬로 시상대 높이 차이 표현 */
+    justify-content: center;
+    gap: 5px; /* 시상대 사이의 미세한 간격 */
+    padding: 20px;
+    text-align: center;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.podium-step {
+    flex-grow: 1;
+    padding: 20px 15px;
+    border-radius: 12px 12px 0 0; /* 위쪽만 둥글게 */
+    color: var(--color-text-main, #5D4037);
+    position: relative;
+    overflow: hidden;
+    transition: all 0.3s ease;
+    border: 1px solid var(--color-border, #E0E0E0);
+    border-bottom: none;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+}
+
+/* 순위별 시상대 순서 및 높이 재정렬 (2등-1등-3등 배치) */
+.podium-step.rank-1 { 
+    order: 2; /* 1등을 중앙에 배치 */
+    min-height: 200px;
+    background-color: var(--color-primary, #B3E5FC); /* 포인트 색상 */
+    transform: scale(1.05); /* 중앙에서 약간 더 크게 */
+    z-index: 2;
+}
+.podium-step.rank-2 { 
+    order: 1; /* 2등을 왼쪽에 배치 */
+    min-height: 160px;
+    background-color: var(--color-surface, #FFFFFF);
+    z-index: 1;
+}
+.podium-step.rank-3 { 
+    order: 3; /* 3등을 오른쪽에 배치 */
+    min-height: 120px;
+    background-color: var(--color-surface, #FFFFFF);
+    z-index: 1;
+}
+
+.podium-medal {
+    font-size: 3.5rem;
+    line-height: 1;
+    margin-bottom: 8px;
+}
+
+.podium-name {
+    font-size: 1.25rem;
+    font-weight: 700;
+    margin-bottom: 4px;
+}
+
+.podium-value {
+    font-size: 1.1rem;
+    font-weight: 500;
+    color: #757575;
+}
+
+/* 배경에 순위 숫자를 희미하게 표시 */
+.podium-rank-number {
+    position: absolute;
+    right: -10px;
+    bottom: -20px;
+    font-size: 6rem;
+    font-weight: 900;
+    color: rgba(0,0,0,0.05);
+    z-index: 0;
+}
