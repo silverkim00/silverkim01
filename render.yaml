@@ -1,20 +1,20 @@
-# render.yaml (리포지토리 루트: C:\Users\pc\silverkim01\render.yaml)
+# ── company-project/render.yaml ──
 
-# 1. PostgreSQL 데이터베이스 생성
+# 1) PostgreSQL 데이터베이스
 databases:
   - name: company-db
     plan: free
 
-# 2. 서비스 설정
+# 2) 서비스 정의
 services:
-  # 2-1. Django 백엔드 (Docker)
+  # 2-1) Django 백엔드 (Docker)
   - type: web
     name: django-backend
     plan: free
     env: docker
-    rootDir: .                                # 리포 루트 기준
-    dockerfilePath: company/Dockerfile        # 회사 프로젝트 폴더 내 Dockerfile
-    startCommand: >                           # migrate → collectstatic → gunicorn
+    rootDir: .                     # repo 루트 기준
+    dockerfilePath: company/Dockerfile
+    startCommand: >
       python company/manage.py migrate --noinput &&
       python company/manage.py collectstatic --noinput &&
       gunicorn config.wsgi:application --chdir company --bind 0.0.0.0:$PORT
@@ -30,17 +30,15 @@ services:
       - key: ALLOWED_HOSTS
         value: ".onrender.com,localhost,127.0.0.1"
 
-  # 2-2. React 프론트엔드 (Static)
+  # 2-2) React 프론트엔드 (Static)
   - type: static
     name: react-frontend
     plan: free
-    rootDir: .                                # 리포 루트 기준
-    buildCommand: |                           # frontend로 이동해 빌드
-      cd frontend &&
+    rootDir: frontend              # frontend 디렉터리 기준
+    buildCommand: |
       npm install &&
-      export REACT_APP_API_BASE_URL=https://django-backend-gwoq.onrender.com/api &&
       npm run build
-    staticPublishPath: frontend/build
+    staticPublishPath: build
     envVars:
       - key: REACT_APP_API_BASE_URL
         value: "https://django-backend-gwoq.onrender.com/api"
