@@ -1,7 +1,7 @@
 services:
   # 1. PostgreSQL 데이터베이스 생성
   - name: company-db
-    type: psql
+    type: postgres
     psqlVersion: 15
     plan: free
 
