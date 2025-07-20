@@ -7,29 +7,28 @@ databases:
 
 # 2) 서비스 정의
 services:
-  # 2-1) Django 백엔드 (Docker)
   - type: web
     name: django-backend
     plan: free
     env: docker
-    rootDir: company           # company/manage.py 위치
-    dockerfilePath: Dockerfile # company/Dockerfile
+    rootDir: company
+    dockerfilePath: Dockerfile
     startCommand: |
-      # Django migrate → collectstatic → Gunicorn
       python manage.py migrate --noinput
       python manage.py collectstatic --noinput
-      gunicorn config.wsgi:application --bind 0.0.0.0:$PORT
+      python manage.py runserver 0.0.0.0:$PORT
     envVars:
       - key: DATABASE_URL
         fromDatabase:
           name: company-db
           property: connectionString
       - key: SECRET_KEY
-        value: "5^bug+*qjmg3b)+bwp#j09-(wguw!umv&m2yatbv_ji0los_*!"`
+        value: "5^bug+*qjmg3b)+bwp#j09-(wguw!umv&m2yatbv_ji0los_*!"
       - key: DEBUG
         value: "False"
       - key: ALLOWED_HOSTS
         value: ".onrender.com,localhost,127.0.0.1"
+
 
   # 2-2) React 프론트엔드 (Static)
   - type: static
