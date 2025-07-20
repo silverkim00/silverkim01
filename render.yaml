@@ -1,20 +1,17 @@
-# ── company-project/render.yaml ──
-
 databases:
   - name: company-db
     plan: free
 
 services:
-  # Django 백엔드
   - type: web
     name: django-backend
     plan: free
     env: docker
-    rootDir: company           # manage.py와 Dockerfile 위치
-    dockerfilePath: Dockerfile # 위 폴더 안의 Dockerfile
-    startCommand: >
-      python manage.py migrate --noinput &&
-      python manage.py collectstatic --noinput &&
+    rootDir: company
+    dockerfilePath: Dockerfile
+    startCommand: |
+      python manage.py migrate --noinput
+      python manage.py collectstatic --noinput
       gunicorn config.wsgi:application --bind 0.0.0.0:$PORT
     envVars:
       - key: DATABASE_URL
@@ -27,6 +24,7 @@ services:
         value: "False"
       - key: ALLOWED_HOSTS
         value: ".onrender.com,localhost,127.0.0.1"
+
 
   # React 프론트엔드
   - type: static
