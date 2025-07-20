@@ -1,26 +1,22 @@
-# 1. 데이터베이스 정의 (services 밖, 별도의 databases 키 사용)
 databases:
   - name: company-db
     plan: free
     postgresVersion: 15
 
-# 2. 서비스들 정의
 services:
-  # Django 백엔드
   - name: django-backend
     type: web
     plan: free
     env: docker
     dockerfilePath: ./company/Dockerfile
     envVars:
-      - key: PYTHON_VERSION
-        value: 3.10
       - key: DATABASE_URL
-        fromDatabase: # 'fromService'가 아니라 'fromDatabase'를 사용합니다.
+        fromDatabase:
           name: company-db
           property: connectionString
+      - key: PYTHON_VERSION
+        value: 3.10
 
-  # React 프론트엔드
   - name: react-frontend
     type: static_site
     plan: free
