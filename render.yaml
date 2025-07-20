@@ -1,7 +1,7 @@
 databases:
   - name: company-db
     plan: free
-    postgresVersion: 15
+    version: 15 # postgresVersion 대신 version으로 변경
 
 services:
   - name: django-backend
@@ -18,11 +18,11 @@ services:
         value: 3.10
 
   - name: react-frontend
-    type: web # Changed from static_site to web
+    type: web
     plan: free
     rootDir: ./frontend
     buildCommand: npm install && npm run build
-    staticPublishPath: build # Corrected for web service static file serving
+    staticPublishPath: build
     routes:
       - type: rewrite
         source: /*
